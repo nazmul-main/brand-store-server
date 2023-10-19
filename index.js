@@ -1,6 +1,6 @@
 const express = require('express');
 const cors = require('cors');
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const port = process.env.PORT || 5001;
 const app = express();
 
@@ -32,7 +32,32 @@ async function run() {
 
 // brand name 
 app.post('/brand', async (req, res) => {
-      const brand = [{brand: "Apple"}, {brand: "Samsung"}, {brand: "Oppo"}, {brand: "Realme"},{brand: "Intel"}, {brand: "Xiaomi"}];
+      const brand =[
+        {
+          "photo": "https://i.ibb.co/Bg2Z4gj/Apple-Logo.png",
+          "brand": "Apple"
+        },
+        {
+          "photo": "https://i.ibb.co/56B3Z7d/png-transparent-samsung-logo-samsung-galaxy-a8-2018-logo-samsung-electronics-arrow-sketch-company-te.png",
+          "brand": "Samsung"
+        },
+        {
+          "photo": "https://i.ibb.co/YDD5P8g/png-clipart-oppo-logo-phone-identity-removebg-preview.png",
+          "brand": "Oppo"
+        },
+        {
+          "photo": "https://i.ibb.co/6D7Wvjy/Realme-logo.png",
+          "brand": "Realme"
+        },
+        {
+          "photo": "https://i.ibb.co/CsgQXMc/png-transparent-intel-logo-fujitsu-business-technology-intel-blue-text-trademark-thumbnail-removebg.png",
+          "brand": "Intel"
+        },
+        {
+          "photo": "https://i.ibb.co/Y29C8BZ/60410c7b26ef2b00045692f8.png",
+          "brand": "Xiaomi"
+        }
+      ]
       const result = await brandCollection.insertMany(brand);
       console.log(result);
       res.send(result);
@@ -56,6 +81,15 @@ app.post('/brand', async (req, res) => {
       const result = await phoneCollection.find().toArray();
       res.send(result);
     });
+
+
+    app.get('/phones/:brand', async (req, res) => {
+      const brand = req.params.brand;
+      const query = { brand: brand };
+      const result = await phoneCollection.find(query).toArray();
+      res.send(result);
+    });
+    
     
 
 
