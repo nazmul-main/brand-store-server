@@ -27,6 +27,21 @@ async function run() {
     await client.connect();
 
     const phoneCollection = client.db(phoneDB).collection("Phones"); // Assuming "Phones" is the name of the collection
+    const brandCollection = client.db(phoneDB).collection("Brand"); // Assuming "Phones" is the name of the collection
+
+
+// brand name 
+app.post('/brand', async (req, res) => {
+      const brand = [{brand: "Apple"}, {brand: "Samsung"}, {brand: "Oppo"}, {brand: "Realme"},{brand: "Intel"}, {brand: "Xiaomi"}];
+      const result = await brandCollection.insertMany(brand);
+      console.log(result);
+      res.send(result);
+    });
+
+    app.get('/brand', async (req, res) => {
+      const result = await brandCollection.find().toArray();
+      res.send(result);
+    });
 
 
     // phones single data
@@ -38,9 +53,10 @@ async function run() {
     });
 
     app.get('/phones', async (req, res) => {
-      const result = await phoneCollection.findOne().toArray();
+      const result = await phoneCollection.find().toArray();
       res.send(result);
     });
+    
 
 
 
