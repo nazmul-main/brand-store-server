@@ -38,7 +38,7 @@ async function run() {
     });
 
     app.get('/phones', async (req, res) => {
-      const result = await phoneCollection.find().toArray();
+      const result = await phoneCollection.findOne().toArray();
       res.send(result);
     });
 
