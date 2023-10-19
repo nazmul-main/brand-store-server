@@ -1,17 +1,15 @@
 const express = require('express');
-const  cors = require('cors');
+const cors = require('cors');
 const { MongoClient, ServerApiVersion } = require('mongodb');
-const port = process.env.PORT || 5001
+const port = process.env.PORT || 5001;
 const app = express();
 
 // Middleware
 app.use(cors());
 app.use(express.json());
 
-// brand-store
-// w5ISpqFH4ZL99Vop
-
-
+// Define the database name
+const phoneDB = "your_database_name"; // Replace with your actual database name
 
 const uri = "mongodb+srv://brand-store:w5ISpqFH4ZL99Vop@cluster0.idkvt6k.mongodb.net/?retryWrites=true&w=majority";
 
@@ -26,9 +24,29 @@ const client = new MongoClient(uri, {
 
 async function run() {
   try {
-    // Connect the client to the server	(optional starting in v4.7)
     await client.connect();
-    // Send a ping to confirm a successful connection
+
+    const phoneCollection = client.db(phoneDB).collection("Phones"); // Assuming "Phones" is the name of the collection
+
+
+    // phones single data
+    app.post('/phones', async (req, res) => {
+      const phone = req.body;
+      const result = await phoneCollection.insertOne(phone);
+      console.log(result);
+      res.send(result);
+    });
+
+    app.get('/phones', async (req, res) => {
+      const result = await phoneCollection.find().toArray();
+      res.send(result);
+    });
+
+
+
+
+
+
     await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
   } finally {
@@ -36,15 +54,13 @@ async function run() {
     // await client.close();
   }
 }
+
 run().catch(console.dir);
 
+app.get('/', (req, res) => {
+  res.send('CRUD is running...!');
+});
 
-
-
-app.get('/', (req, res) =>{
-    res.send(' crud is running...!');
-})
-
-app.listen(port, (req, res) => {
-    console.log(`Server is running on port ${port}`);
-})
+app.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
+});
