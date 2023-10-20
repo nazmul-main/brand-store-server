@@ -27,10 +27,11 @@ const client = new MongoClient(uri, {
 
 async function run() {
   try {
-    await client.connect();
+    // await client.connect();
 
-    const phoneCollection = client.db(phoneDB).collection("Phones"); // Assuming "Phones" is the name of the collection
-    const brandCollection = client.db(phoneDB).collection("Brand"); // Assuming "Phones" is the name of the collection
+    const phoneCollection = client.db(phoneDB).collection("Phones"); 
+    const brandCollection = client.db(phoneDB).collection("Brand"); 
+    const cartCollection = client.db(phoneDB).collection("Cart"); 
 
 
 // brand name 
@@ -80,16 +81,40 @@ app.post('/brand', async (req, res) => {
       res.send(result);
     });
 
+
     app.get('/phones', async (req, res) => {
       const result = await phoneCollection.find().toArray();
       res.send(result);
     });
+
+
+    app.post('/mycart', async (req, res) => {
+      const cart = req.body;
+      const result = await cartCollection.insertOne(cart);
+      console.log(result);
+      res.send(result);
+    });
+
+    app.get('/mycart', async (req, res) => {
+      const result = await cartCollection.find().toArray();
+      res.send(result);
+    });
+
+    
 
     app.get('/phones/:id', async (req, res) => {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) };
       const result = await phoneCollection.findOne(query);
       res.send(result);
+    })
+
+    app.delete('/mycart/:id', async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await cartCollection.deleteOne(query);
+      res.send(result);
+
     })
 
     app.put('/phones/:id', async (req, res) => {
