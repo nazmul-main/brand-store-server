@@ -1,5 +1,6 @@
 const express = require('express');
 const cors = require('cors');
+require('dotenv').config();
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const port = process.env.PORT || 5001;
 const app = express();
@@ -10,6 +11,9 @@ app.use(express.json());
 
 // Define the database name
 const phoneDB = "your_database_name"; // Replace with your actual database name
+
+console.log(process.env.DB_USER);
+console.log(process.env.DB_PASS);
 
 const uri = "mongodb+srv://brand-store:w5ISpqFH4ZL99Vop@cluster0.idkvt6k.mongodb.net/?retryWrites=true&w=majority";
 
@@ -82,13 +86,47 @@ app.post('/brand', async (req, res) => {
       res.send(result);
     });
 
+    app.get('/phones/:id', async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await phoneCollection.findOne(query);
+      res.send(result);
+    })
 
-    app.get('/phones/:brand', async (req, res) => {
+    app.put('/phones/:id', async (req, res) => {
+      const id = req.params.id;
+      const phone = req.body
+      console.log(id, phone);
+      const filter = {_id: new ObjectId(id)}
+      const option = {upsert: true}
+      const updatedPhone = {
+        $set: {
+          name: phone.name,
+          type: phone.type,
+          price: phone.price,
+          photo: phone.photo,
+          brand: phone.brand,
+          rating: phone.rating
+          
+        }
+      }
+
+      const result = await phoneCollection.findOne(filter, updatedPhone, option);
+      res.send(result);
+      console.log(result);
+
+    })
+    
+
+
+    app.get('/phon/:brand', async (req, res) => {
       const brand = req.params.brand;
       const query = { brand: brand };
       const result = await phoneCollection.find(query).toArray();
       res.send(result);
     });
+
+
     
     
 
