@@ -88,6 +88,7 @@ app.post('/brand', async (req, res) => {
     });
 
 
+    // post mycard data------------------------
     app.post('/mycart', async (req, res) => {
       const cart = req.body;
       const result = await cartCollection.insertOne(cart);
@@ -109,13 +110,7 @@ app.post('/brand', async (req, res) => {
       res.send(result);
     })
 
-    app.delete('/mycart/:id', async (req, res) => {
-      const id = req.params.id;
-      const query = { _id: new ObjectId(id) };
-      const result = await cartCollection.deleteOne(query);
-      res.send(result);
-
-    })
+   
 
     app.put('/phones/:id', async (req, res) => {
       const id = req.params.id;
@@ -139,7 +134,6 @@ app.post('/brand', async (req, res) => {
       console.log(result);
 
     })
-    
 
 
     app.get('/phon/:brand', async (req, res) => {
@@ -148,6 +142,15 @@ app.post('/brand', async (req, res) => {
       const result = await phoneCollection.find(query).toArray();
       res.send(result);
     });
+
+    // Delete Cart --------------------------------
+    app.delete('/mycart/:id', async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await cartCollection.deleteOne(query);
+      res.send(result);
+
+    })
 
 
 
