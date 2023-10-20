@@ -12,10 +12,9 @@ app.use(express.json());
 // Define the database name
 const phoneDB = "your_database_name"; // Replace with your actual database name
 
-console.log(process.env.DB_USER);
-console.log(process.env.DB_PASS);
 
-const uri = "mongodb+srv://brand-store:w5ISpqFH4ZL99Vop@cluster0.idkvt6k.mongodb.net/?retryWrites=true&w=majority";
+
+const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.idkvt6k.mongodb.net/?retryWrites=true&w=majority`;
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
 const client = new MongoClient(uri, {
@@ -107,11 +106,10 @@ app.post('/brand', async (req, res) => {
           photo: phone.photo,
           brand: phone.brand,
           rating: phone.rating
-          
         }
       }
 
-      const result = await phoneCollection.findOne(filter, updatedPhone, option);
+      const result = await phoneCollection.updateOne(filter, updatedPhone, option);
       res.send(result);
       console.log(result);
 
@@ -125,12 +123,6 @@ app.post('/brand', async (req, res) => {
       const result = await phoneCollection.find(query).toArray();
       res.send(result);
     });
-
-
-    
-    
-
-
 
 
 
