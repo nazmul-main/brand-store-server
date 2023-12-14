@@ -29,13 +29,13 @@ async function run() {
   try {
     // await client.connect();
 
-    const phoneCollection = client.db(phoneDB).collection("Phones"); 
-    const brandCollection = client.db(phoneDB).collection("Brand"); 
-    const cartCollection = client.db(phoneDB).collection("Cart"); 
+    const phoneCollection = client.db(phoneDB).collection("Phones");
+    const brandCollection = client.db(phoneDB).collection("Brand");
+    const cartCollection = client.db(phoneDB).collection("Cart");
 
 
-// brand name 
-app.post('/brand', async (req, res) => {
+    // brand name 
+    app.post('/brand', async (req, res) => {
       const brand =[
         {
           "photo": "https://i.ibb.co/Bg2Z4gj/Apple-Logo.png",
@@ -101,7 +101,7 @@ app.post('/brand', async (req, res) => {
       res.send(result);
     });
 
-    
+
 
     app.get('/phones/:id', async (req, res) => {
       const id = req.params.id;
@@ -110,26 +110,26 @@ app.post('/brand', async (req, res) => {
       res.send(result);
     })
 
-   
+
 
     app.put('/phones/:id', async (req, res) => {
       const id = req.params.id;
-      const phone = req.body
-      console.log(id, phone);
-      const filter = {_id: new ObjectId(id)}
-      const option = {upsert: true}
-      const updatedPhone = {
+      const data = req.body
+      console.log(id, data);
+      const filter = { _id: new ObjectId(id) }
+      const option = { upsert: true }
+      const updatedata = {
         $set: {
-          name: phone.name,
-          type: phone.type,
-          price: phone.price,
-          photo: phone.photo,
-          brand: phone.brand,
-          rating: phone.rating
+          name: data.name,
+          type: data.type,
+          price: data.price,
+          photo: data.photo,
+          brand: data.brand,
+          rating: data.rating
         }
       }
 
-      const result = await phoneCollection.updateOne(filter, updatedPhone, option);
+      const result = await phoneCollection.updateOne(filter, updatedata, option);
       res.send(result);
       console.log(result);
 
